@@ -1,6 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 
-import poplib, urllib
+import poplib
+import urllib
 from settings import PASSWORD, USER_NAME, SMS_API_KEY, PHONE, POP_SERVER
 
 
@@ -44,9 +45,15 @@ class MailChecker(object):
 
         numMessages = len(mailServer.list()[1])
         for i in range(numMessages):
-            for j in mailServer.retr(i+1)[1]:
+            for j in mailServer.retr(i + 1)[1]:
                 if (j.find("Subject: Test") > -1):
-                    smsParams = urllib.urlencode({'api_id': self.sms_api_key, 'to': self.phone, 'text': 'Test message has arrived'})
+                    smsParams = urllib.urlencode(
+                        {
+                            'api_id': self.sms_api_key,
+                            'to': self.phone,
+                            'text': 'Test message has arrived'
+                        }
+                    )
                     f = urllib.urlopen("http://sms.ru/sms/send?%s" % smsParams)
                     if f.read() in servicecodes:
                         print(servicecodes[int(f.read())])
